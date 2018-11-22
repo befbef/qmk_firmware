@@ -1,2 +1,2 @@
-# The Default Planck Layout
+# A more basic Planck Layout for copying
 
