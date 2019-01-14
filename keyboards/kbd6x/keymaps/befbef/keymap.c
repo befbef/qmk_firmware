@@ -79,9 +79,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
 			if (record->event.pressed) 
 			{
 				if (keyboard_report->mods & MOD_BIT(KC_LSFT)) 
-					SEND_STRING(SS_TAP(X_NUMLOCK)SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_1)SS_TAP(X_KP_9)SS_TAP(X_KP_6))SS_TAP(X_NUMLOCK));
+					SEND_STRING(SS_LALT(SS_TAP(X_KP_1)SS_TAP(X_KP_4)SS_TAP(X_KP_2)));
 				else
-					SEND_STRING(SS_TAP(X_NUMLOCK)SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_2)SS_TAP(X_KP_8))SS_TAP(X_NUMLOCK));
+					SEND_STRING(SS_LALT(SS_TAP(X_KP_1)SS_TAP(X_KP_3)SS_TAP(X_KP_2)));
 			} 
 		break;
 
@@ -98,7 +98,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
 		case SSSZ:
 			if (record->event.pressed) 
 			{ 
-				SEND_STRING(SS_TAP(X_NUMLOCK)SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_2)SS_TAP(X_KP_5))SS_TAP(X_NUMLOCK));
+				SEND_STRING(SS_LALT(SS_TAP(X_KP_2)SS_TAP(X_KP_2)SS_TAP(X_KP_5)));
 			} 
 			break;				
 	}
