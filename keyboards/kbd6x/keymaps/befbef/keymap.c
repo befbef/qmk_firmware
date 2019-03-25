@@ -18,12 +18,39 @@
 // iproved hhkb layout with more functionality
 
 
+#define MODS_SHIFT_MASK  (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT))
+
 enum custom_keycodes {
-  OUML = SAFE_RANGE,
-  UUML,
-  AUML,
-  SSSZ,
+    KX_AE = SAFE_RANGE,
+    KX_OE,
+    KX_UE,
+    KX_SS,
+    KX_EURO,
 };
+
+char *alt_codes[][2] = {
+    {
+        SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_2)SS_TAP(X_KP_8)), // Alt+0228 → ä
+        SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_1)SS_TAP(X_KP_9)SS_TAP(X_KP_6)), // Alt+0196 → Ä
+    },
+    {
+        SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_4)SS_TAP(X_KP_6)), // Alt+0246 → ö
+        SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_1)SS_TAP(X_KP_4)), // Alt+0214 → Ö
+    },
+    {
+        SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_5)SS_TAP(X_KP_2)), // Alt+0252 → ü
+        SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_2)SS_TAP(X_KP_0)), // Alt+0220 → Ü
+    },
+    {
+        SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_2)SS_TAP(X_KP_3)), // Alt+0223 → ß
+        SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_2)SS_TAP(X_KP_3)), // Alt+0223 → ß
+    },
+    {
+        SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_1)SS_TAP(X_KP_2)SS_TAP(X_KP_8)), // Alt+0128 → €
+        SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_1)SS_TAP(X_KP_2)SS_TAP(X_KP_8)), // Alt+0128 → €
+    }
+};
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT(
@@ -31,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,     KC_Y,   KC_U,   KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSPC,
       KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,     KC_H,   KC_J,   KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,
       KC_LSFT, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,     KC_N,   KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, MO(1),
-      KC_LCTL, KC_LGUI, KC_LALT,                   LT(2, KC_SPACE),                 KC_RALT, KC_RGUI, KC_RCTL
+      KC_LGUI, KC_LGUI, KC_LALT,                   LT(2, KC_SPACE),                 KC_RALT, KC_RGUI, KC_RGUI
       ),
 
   [1] = LAYOUT(
@@ -45,11 +72,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 	  
   [2] = LAYOUT(
       KC_GRV,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_INS, KC_TRNS,
-      KC_CAPS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_HOME, KC_UP, KC_END, KC_TRNS, UUML, KC_TRNS, KC_DEL,
-      KC_TRNS, KC_TRNS, SSSZ,    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_LEFT, KC_DOWN, KC_RGHT, OUML, AUML, KC_TRNS,
+      KC_CAPS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_HOME, KC_UP, KC_END, KC_TRNS, KX_UE, KC_TRNS, KC_DEL,
+      KC_RCTL, KC_TRNS, KX_SS,    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_LEFT, KC_DOWN, KC_RGHT, KX_OE, KX_AE, KC_TRNS,
       KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,  KC_TRNS, KC_TRNS,  KC_TRNS, KC_PGUP, KC_PGDN, KC_TRNS, KC_TRNS, KC_TRNS, RESET,
       KC_TRNS, KC_TRNS, KC_TRNS,                   KC_TRNS,                   KC_TRNS, KC_TRNS, KC_TRNS
-      ),
+      )
 };
 
 
@@ -62,46 +89,27 @@ void matrix_scan_user(void) {
 
 }
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) 
+bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
-	switch (keycode) 
-	{
-		case OUML: //Alt 0246
-			if (record->event.pressed) 
-			{
-				//SEND_STRING(SS_TAP(X_NUMLOCK)SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_1)SS_TAP(X_KP_4))SS_TAP(X_NUMLOCK));
-				SEND_STRING(SS_TAP(X_NUMLOCK)SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_4)SS_TAP(X_KP_6))SS_TAP(X_NUMLOCK));	
-			} 
-		break;
-
-		
-		case AUML: //Alt 0228
-			if (record->event.pressed) 
-			{
-				if (keyboard_report->mods & MOD_BIT(KC_LSFT)) 
-					SEND_STRING(SS_LALT(SS_TAP(X_KP_1)SS_TAP(X_KP_4)SS_TAP(X_KP_2)));
-				else
-					SEND_STRING(SS_LALT(SS_TAP(X_KP_1)SS_TAP(X_KP_3)SS_TAP(X_KP_2)));
-			} 
-		break;
-
-		case UUML:
-			if (record->event.pressed) 
-			{
-				if (keyboard_report->mods & MOD_BIT(KC_LSFT)) 
-					SEND_STRING(SS_TAP(X_NUMLOCK)SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_2)SS_TAP(X_KP_0))SS_TAP(X_NUMLOCK));
-				else
-					SEND_STRING(SS_TAP(X_NUMLOCK)SS_LALT(SS_TAP(X_KP_0)SS_TAP(X_KP_2)SS_TAP(X_KP_5)SS_TAP(X_KP_2))SS_TAP(X_NUMLOCK));
-			} 
-			break;
-			
-		case SSSZ:
-			if (record->event.pressed) 
-			{ 
-				SEND_STRING(SS_LALT(SS_TAP(X_KP_2)SS_TAP(X_KP_2)SS_TAP(X_KP_5)));
-			} 
-			break;				
-	}
-  return true;
-};
-
+    if (!record->event.pressed) return true;
+    
+    switch (keycode) {
+    case KX_AE: case KX_OE: case KX_UE: case KX_SS: case KX_EURO: {
+        uint16_t index = keycode - KX_AE;
+        uint8_t shift = get_mods()&MODS_SHIFT_MASK;
+        
+        unregister_code(KC_LSFT); // Gotta temporarily disable both shift keys, else this whole thing may behave oddly
+        unregister_code(KC_RSFT);
+        
+        // Choose Alt code based on which key was pressed and whether Shift was held.
+        send_string(alt_codes[index][ (bool)shift]);
+        
+        if (shift &MOD_BIT(KC_LSFT)) register_code(KC_LSFT); // Restore shift keys to previous state
+        if (shift &MOD_BIT(KC_RSFT)) register_code(KC_RSFT);
+        
+        return false;
+    }
+    default:
+        return true;
+    }
+}
